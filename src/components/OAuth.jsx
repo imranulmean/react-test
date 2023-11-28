@@ -9,8 +9,8 @@ export default function OAuth() {
 
       const provider = new GoogleAuthProvider();
       const auth = getAuth(app);
-      const result = await signInWithPopup(auth, provider);
-      await AWSCognitoId(result);
+      const fireBaseGoogleResult = await signInWithPopup(auth, provider);
+      await AWSCognitoId(fireBaseGoogleResult);
       return;
       // '/api/auth/google'
       const signInApiURL=`https://0ko7jyglbb.execute-api.us-east-1.amazonaws.com/mern-state-auth/mern-state-auth-signip`;
@@ -39,17 +39,15 @@ export default function OAuth() {
     }
   };
 
-  const AWSCognitoId= async(googleResult) =>{
+  const AWSCognitoId= async(fireBaseGoogleResult) =>{
 
-    console.log('Firebase',googleResult);
-    // console.log('accessToken',googleResult.user.accessToken);
-    // console.log('idtoken',googleResult._tokenResponse.idToken);
+     //console.log('googleResult._tokenResponse.oauthIdToken',fireBaseGoogleResult._tokenResponse.oauthIdToken);
   
       AWS.config.region = 'us-east-1';
       AWS.config.credentials = new AWS.CognitoIdentityCredentials({
         IdentityPoolId: 'us-east-1:b0a755d9-bcfb-4784-929f-9742e02b4e64', // MAKE SURE YOU REPLACE THIS
         Logins: {
-          'accounts.google.com': googleResult.user.accessToken
+          'accounts.google.com': fireBaseGoogleResult._tokenResponse.oauthIdToken
         }
       });
       AWS.config.credentials.get(function(err) {
